@@ -47,8 +47,7 @@ def get_predict(image_bytes):
         # cv2.waitKey()
         pil_img = Image.fromarray((prediction * 255).astype(np.uint8))
         pil_img = pil_img.convert("1")
-        pil_img.save("./static/pre.jpg")
-        # return_info = {"result":"/static/pre.jpg"}
+        # pil_img.save("./static/pre.jpg")
 
         buffer=io.BytesIO()
         pil_img.save(buffer,"PNG") # 将Image对象转为二进制存入buffer。因BytesIO()是在内存中操作，所以实际是存入内存
