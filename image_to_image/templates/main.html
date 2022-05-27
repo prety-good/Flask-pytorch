@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Flask+HTML前后端分离部署Pytorch模型demo</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    </head>
+
+    <body>
+        <div style="text-align: left; margin-left:150px; margin-top:10px;" >
+            <h3>请选择图片文件</h3>
+        </div>
+
+        <div style="text-align: left; margin-left:150px; margin-top:30px;" >
+
+            <div style="float:left;">
+                <!-- <a href="javascript:;" class="file" style="text-align: left; margin-left:50px; margin-top:30px;"></a> -->
+                <input type="file" name="file" id="file0"><br>
+                <img src="" id="img0" style="margin-top:20px; width: 35rem; height: 35rem;">
+            </div>
+
+            <div style="float:left;margin-left:20px; margin-top:450px;">
+                <input type="button" id="b0" onclick="predict()" value="预测">
+            </div>
+
+            <div style="float:left;margin-left:20px; margin-top:24px;">
+                <img src="" id="out"  style="margin-top:20px;width: 35rem;height: 35rem;">
+            </div>
+
+            <!-- <div style="float:left;margin-left:20px; margin-top:20px;">
+                <input type = "button"  id="text"  value="测试111">
+            </div> -->
+
+        </div>
+
+        <script type="text/javascript">
+            $("#file0").change(function(){
+                // 图片格式为 PNG/JPG/JPEG/SVG/GIF之一时可以使用，仅在前端渲染，不涉及后端操作
+                // var objUrl = getObjectURL(this.files[0]);//获取文件信息
+                // document.getElementById("text").value = objUrl
+                // console.log("objUrl = "+objUrl);
+                // if (objUrl) {
+                //     $("#img0").attr("src", objUrl);
+                // }
+
+                // 任意格式图片都可以使用，原理为在后端将图片转换为PNG格式再发给前端进行显示
+                trans_image()
+            });
+            // 在后端将图片转换为PNG格式再发给前端进行显示
+            function trans_image() {
+                var fileobj = $("#file0")[0].files[0];
+                console.log(fileobj);
+                var form = new FormData();
+                form.append("file", fileobj);
+                var out='';
+                $.ajax({
+                    type: 'POST',
+                    url: "trans_img",
+                    data: form,
+                    async: false,       //是否同步执行
+                    processData: false, // 标志 jquery要传输data对象
+                    contentType: false, //标志 jquery不需要增加请求头对于contentType的设置
+                    success: function (arg) { // 成功， 拿到out
+                        console.log(arg)
+                        out = arg.result;
+                    },
+                    error:function(){ //失败
+                        console.log("后台处理错误");
+                    }
+                });
+                // 进行显示
+                document.getElementById("img0").src = out
+            }
+
+            // 进行模型推理并显示推理结果
+            function predict() {
+                var fileobj = $("#file0")[0].files[0];
+                console.log(fileobj);
+                var form = new FormData();
+                form.append("file", fileobj);
+                var out='';
+                $.ajax({
+                    type: 'POST',
+                    url: "predict",
+                    data: form,
+                    async: false,
+                    processData: false,
+                    contentType: false,
+                    success: function (arg) {
+                        console.log(arg)
+                        out = arg.result;
+                    },
+                    error:function(){
+                        console.log("后台处理错误");
+                    }
+                });
+                document.getElementById("out").src = out
+            }
+
+            // 获得图片的 blob格式的地址
+            function getObjectURL(file) {
+                var url = null;
+                if(window.createObjectURL!=undefined) {
+                    url = window.createObjectURL(file) ;
+                }else if (window.URL!=undefined) { // mozilla(firefox)
+                    url = window.URL.createObjectURL(file) ;
+                }else if (window.webkitURL!=undefined) { // webkit or chrome
+                    url = window.webkitURL.createObjectURL(file) ;
+                }
+                return url ;
+            }
+        </script>
+
+        <style>
+            .file {
+                position: relative;
+                /*display: inline-block;*/
+                background: #CCC ;
+                border: 1px solid #CCC;
+                padding: 4px 4px;
+                overflow: hidden;
+                text-decoration: none;
+                text-indent: 0;
+                width:100px;
+                height:30px;
+                line-height: 30px;
+                border-radius: 5px;
+                color: #333;
+                font-size: 13px;
+
+            }
+            .file input {
+                position: absolute;
+                font-size: 13px;
+                right: 0;
+                top: 0;
+                opacity: 0;
+                border: 1px solid #333;
+                padding: 4px 4px;
+                overflow: hidden;
+                text-indent: 0;
+                width:100px;
+                height:30px;
+                line-height: 30px;
+                border-radius: 5px;
+                color: #FFFFFF;
+
+            }
+            #b0{
+                background: #1899FF;
+                border: 1px solid #CCC;
+                padding: 4px 10px;
+                overflow: hidden;
+                text-indent: 0;
+                width:60px;
+                height:28px;
+                line-height: 20px;
+                border-radius: 5px;
+                color: #FFFFFF;
+                font-size: 13px;
+            }
+            #text{
+                border: 1px solid #CCC;
+                padding: 4px 10px;
+                overflow: hidden;
+                text-indent: 5;
+                width:500px;
+                height:28px;
+                line-height: 20px;
+                border-radius: 5px;
+                font-size: 13px;
+            }
+
+        </style>
+        
+    </body>
+</html>
+
+
