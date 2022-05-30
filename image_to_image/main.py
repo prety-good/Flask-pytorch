@@ -17,9 +17,9 @@ CORS(app)  # 解决跨域问题
 app.send_file_max_age_default = timedelta(seconds=1)
 # 加载模型
 model_path = './detect.pth'
-device = 'cuda:0'
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 model = Unet_plus_plus().to(device)   # Unet++
-model.load_state_dict(torch.load(model_path, map_location='cuda:0'))
+model.load_state_dict(torch.load(model_path, map_location=device))
 model.eval()
 
 
