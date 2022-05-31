@@ -1,6 +1,6 @@
 import io
 import json
-from traceback import print_tb
+from re import A
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
@@ -10,14 +10,20 @@ from model import Unet_plus_plus
 import numpy as np
 import cv2
 import base64
-
+import datetime
 from datetime import timedelta
+from loguru import logger
+
 app = Flask(__name__)
 CORS(app)  # 解决跨域问题
 app.send_file_max_age_default = timedelta(seconds=1)
+
+#记录日志
+logger.add('./log/log.log')
+
 # 加载模型
 model_path = './detect.pth'
-device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 model = Unet_plus_plus().to(device)   # Unet++
 model.load_state_dict(torch.load(model_path, map_location=device))
 model.eval()
@@ -36,18 +42,26 @@ def get_predict(image_bytes):
         # image = cv2.imdecode(np.frombuffer(image_bytes, np.uint8), cv2.IMREAD_COLOR)
         # image = Image.fromarray(image)
         
+        if image.mode == "RGBA":
+            image=image.convert('RGB')
+        
+        # 保存到 temp文件中，作为临时文件
+        curr_time = datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d-%H:%M:%S')
+        image.save(f"./temp/{curr_time}.jpg")
+        log_str = f"user ip ({request.remote_addr})({request.environ['REMOTE_ADDR']}) save a image!!! "
+        logger.info(log_str)
+
         if image.mode != "RGB":
-            raise ValueError("input file does not RGB image...")
+            raise ValueError(f"input file does not RGB image... but {image.mode} image!!!")
         image = trans(image).unsqueeze(0).to(device)
         with torch.no_grad():
             outputs = model(image).squeeze(0)
         prediction = outputs.cpu().numpy()[0]
-        prediction = prediction > 0.1
+        prediction = prediction > 0.5
         # cv2.imshow("1",(prediction * 255).astype(np.uint8))
         # cv2.waitKey()
         pil_img = Image.fromarray((prediction * 255).astype(np.uint8))
         pil_img = pil_img.convert("1")
-        # pil_img.save("./static/pre.jpg")
 
         buffer=io.BytesIO()
         pil_img.save(buffer,"PNG") # 将Image对象转为二进制存入buffer。因BytesIO()是在内存中操作，所以实际是存入内存
@@ -57,25 +71,29 @@ def get_predict(image_bytes):
         return_info = {"result":base64_data}
 
     except Exception as e:
-        print(e)
+        log_str = f"user ip ({request.remote_addr})({request.environ['REMOTE_ADDR']}) produce a erro:{e}!!! "
+        logger.error(log_str)
         return None
     return return_info
 
 
 @app.route("/predict", methods=["POST"])
 def predict():
+    log_str = f"user ip ({request.remote_addr})({request.environ['REMOTE_ADDR']}) access the predict!!! "
+    logger.info(log_str)
     # 通过request获得图片
     image = request.files["file"]
     # 通过read 将图片转为二进制文件
     img_bytes = image.read()
     # 调用predict,获得分割/增强后的结果
     info = get_predict(img_bytes)
-    
     # return render_template('main.html',result=info)
     return jsonify(info)
 
 @app.route("/trans_img", methods=["POST"])
 def trans_img():
+    log_str = f"user ip ({request.remote_addr})({request.environ['REMOTE_ADDR']}) input a image!!! "
+    logger.info(log_str)
     # 通过request获得图片
     image = request.files["file"]
     # 通过read 将图片转为二进制文件
@@ -92,12 +110,21 @@ def trans_img():
 
 @app.route("/", methods=["GET", "POST"])
 def root():
-    return render_template("main.html", result = './test.jpg')
+    print("************************")
+    print(request.user_agent)
+    print("************************")
+    log_str = f"user ip ({request.remote_addr})({request.environ['REMOTE_ADDR']}) access the server!!! "
+    logger.info(log_str)
+    return render_template("main.html")
+
+@app.route("/snake")
+def snake():
+    log_str = f"user ip ({request.remote_addr})-({request.environ['REMOTE_ADDR']}) access the snake game!!! "
+    logger.info(log_str)
+    return render_template("snake.html")
 
 
 if __name__ == '__main__':
-    app.run(host="127.0.0.1", port=5000)  
-
-
+    app.run(host="127.0.0.1", port=8000)  
 
 
