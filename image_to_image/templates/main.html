@@ -7,31 +7,55 @@
     </head>
 
     <body>
-        <div style="text-align: left; margin-left:150px; margin-top:10px;" >
-            <h3>请选择血管分割任务的待分割图片文件</h3>
-            <div style="text-align: left;margin-left:70vw; margin-top:0px;">
-                <a href="./snake" title="小游戏" target="top">玩个小游戏</a>
-            </div>
+        <h1 style="text-align:center">
+            Flask + Jquery demo
+        </h1>
+
+        <div style="text-align:right;margin-right: 5vw;">
+            <a href="./snake" title="小游戏" target="top">玩个小游戏</a>
         </div>
 
-        <div style="text-align: left; margin-left:150px; margin-top:30px;" >
+        <div style="text-align: left; margin-left:10vw; margin-top:10px;" >
+            <h3>单张测试：请选择血管分割任务的待分割图片文件</h3>
+        </div>
 
-            <div style="float:left;">
+        <div style="text-align: left; margin-left:10vw; margin-top:20px;" >
+            <div style="text-align: left;margin-top:10px;" >
                 <!-- <a href="javascript:;" class="file" style="text-align: left; margin-left:50px; margin-top:30px;"></a> -->
                 <input type="file" name="file" id="file0"><br>
-                <img src="" id="img0" style="margin-top:20px; width: 35rem; height: 35rem;">
             </div>
 
-            <div style="float:left;margin-left:20px; margin-top:450px;">
-                <input type="button" id="b0" onclick="predict()" value="预测">
+            <div style="text-align:left;margin-top:6px;">
+                <div style="float:left;">
+                    <img src="" id="img0" style="width: 35vw; height: 35vw;">
+                </div>
+                    
+                <div style="float:left;margin-left:0vw; margin-top:30vw;">
+                    <input type="button" id="b0" onclick="predict()" value="预测" style="width: 5vw; height: 2vw;">
+                </div>
+
+                <div style="float:left;">
+                    <img src="" id="out"  style="width: 35vw;height: 35vw;">
+                </div>
             </div>
 
-            <div style="float:left;margin-left:20px; margin-top:24px;">
-                <img src="" id="out"  style="margin-top:20px;width: 35rem;height: 35rem;">
-            </div>
         </div>
 
-        <div>
+
+        
+
+        <div style="text-align: left; margin-left:20vw; margin-top:10vh;" >
+            <div style="text-align: top; margin-left:10vw; margin-top:10px;" >
+                <h3>单张测试：请选择血管分割任务的待分割图片文件</h3>
+            </div>
+            
+            <input type="text" id="directory0">
+            <input type="button" onclick="dirpre()" value="批量处理">
+            <input type="text" id="dirpreresult" disabled value="请输入正确的路径">
+            <br>
+        </div>
+
+        <div style="text-align:left; margin-left:10vw;margin-top:5vw;">
             <div style="text-align: left;margin-left:0px; margin-top:0px;">
                 <input type = "text"  id="text" disabled  value="因服务器性能较差，因此推理速度很慢，请耐心等待">
             </div>
@@ -54,6 +78,40 @@
                 // 任意格式图片都可以使用，原理为在后端将图片转换为PNG格式再发给前端进行显示
                 trans_image();
             });
+
+            function dirpre(){
+                var fileobj = $("#directory0").val();
+                console.log(fileobj);
+
+                var form = new FormData();
+                form.append("dir", fileobj);
+                var out='';
+                $.ajax({
+                    type: 'POST',
+                    url: "dirpre",
+                    data: form,
+                    async: false,       //是否同步执行
+                    processData: false, // 标志 jquery要传输data对象
+                    contentType: false, //标志 jquery不需要增加请求头对于contentType的设置
+                    success: function (arg) { // 成功， 拿到out
+                        console.log(arg);
+                        out = arg.result;
+                    },
+                    error:function(){ //失败
+                        console.log("后台处理错误");
+                    }
+                });
+                if( $.isEmptyObject(out)){
+                    document.getElementById("dirpreresult").value = "yes!";
+                }
+                else {
+                    // 进行显示
+                    document.getElementById("dirpreresult").value = out;
+                }
+
+            }
+
+
             // 在后端将图片转换为PNG格式再发给前端进行显示
             function trans_image() {
                 var fileobj = $("#file0")[0].files[0];
@@ -132,6 +190,7 @@
                 }
                 return url ;
             }
+
         </script>
 
         <style>

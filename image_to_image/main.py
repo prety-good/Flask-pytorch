@@ -1,5 +1,6 @@
 import io
 import json
+import os
 from re import A
 import torch
 import torchvision.transforms as transforms
@@ -77,6 +78,20 @@ def get_predict(image_bytes):
     return return_info
 
 
+@app.route("/dirpre", methods=["POST"])
+def dirpre():
+    info = {"result":''}
+    # 通过request获得图片
+    print("****************************")
+    dir = request.form["dir"]
+    if not os.path.exists(dir):
+        info["result"] = 'The input dir is not exits, please check again !'
+        return jsonify(info)
+    dir = os.path.join(dir)
+    print(os.listdir(dir))
+    return jsonify(info)
+
+
 @app.route("/predict", methods=["POST"])
 def predict():
     log_str = f"user ip ({request.remote_addr})({request.environ['REMOTE_ADDR']}) access the predict!!! "
@@ -110,9 +125,9 @@ def trans_img():
 
 @app.route("/", methods=["GET", "POST"])
 def root():
-    print("************************")
-    print(request.user_agent)
-    print("************************")
+    # print("************************")
+    # print(request.user_agent)
+    # print("************************")
     log_str = f"user ip ({request.remote_addr})({request.environ['REMOTE_ADDR']}) access the server!!! "
     logger.info(log_str)
     return render_template("main.html")
