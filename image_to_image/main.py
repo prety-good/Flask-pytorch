@@ -47,7 +47,7 @@ def get_predict(image_bytes):
             image=image.convert('RGB')
         
         # 保存到 temp文件中，作为临时文件
-        curr_time = datetime.datetime.strftime(datetime.datetime.now(),'%Y-%m-%d-%H:%M:%S')
+        curr_time = datetime.datetime.strftime(datetime.datetime.now(),'%Y_%m_%d_%H-%M-%S')
         image.save(f"./temp/{curr_time}.jpg")
         log_str = f"user ip ({request.remote_addr})({request.environ['REMOTE_ADDR']}) save a image!!! "
         logger.info(log_str)

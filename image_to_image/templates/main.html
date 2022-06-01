@@ -22,25 +22,33 @@
             </div>
 
             <h style="text-align: left;">
-                请输入正确的路径，路径格式应该如下：
+                请输入正确的文件夹的绝对路径，文件夹(IMAGE)的格式应该如下：
             </h>
                 
-            <div style="text-align: left;">
+            <div style="text-align: left;margin-left: 10vw;margin-top: 20px;">
                 <div style="float:left;">
-                    <pre>
-                        image_to_words
-                        │  │  class_indices.json
-                        │  │  main.ipynb
-                        │  │  main.py
-                        │  │  model.py
-                        │  │  
-                        │  ├─static
-                        │  │  └─js
-                        │  │          jquery.min.js
-                        │  │          
-                        │  └─templates
-                        │          up.html
-                    </pre>
+                    <textarea disabled style="overflow:auto; line-height:0.7; resize:none;" rows="41" cols="20">
+                        IMAGE：
+                        ├─name_1
+                        │      image1.png
+                        │      image2.png
+                        │      image3.png
+                        │      ......
+                        │      
+                        ├─name_2
+                        │      image1.png
+                        │      image2.png
+                        │      image3.png
+                        │      ......
+                        │      
+                        ├─.......
+                        │      
+                        └─name_x
+                        &nbsp;      image1.png
+                        &nbsp;      image2.png
+                        &nbsp;      image3.png
+                        &nbsp;      ......
+                    </textarea>
                 </div>
                 
                 <div style="float:left;margin-left: 10vw;margin-top: 15vh;">
@@ -53,7 +61,7 @@
                         </button>
                     </div>
                     <div style="text-align:top;">
-                        <input type="text" id="dirpreresult" disabled value="请输入正确的路径"style="width:40vw;height:5vh;">
+                        <input type="text" id="dirpreresult" disabled value="请输入正确的路径，比如：`C:\Users\Sun\Pictures\test\Image`"style="width:40vw;height:5vh;">
                     </div>
                 </div>
             
@@ -86,8 +94,12 @@
                     </button>
                 </div>
 
-                <div>
+                <div style="float:left;">
                     <img src="" id="out"  style="width: 30vw;height: 30vw;">
+                </div>
+
+                <div style="float:left;">
+                    <pre  id="classresult" style="width: 20vw;height: 20vw;line-height: 50px;margin-top:20px;"></pre>
                 </div>
             </div>
 
