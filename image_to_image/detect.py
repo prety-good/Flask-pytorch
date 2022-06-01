@@ -11,7 +11,8 @@ from unetplus import Unet_plus_plus
 model1_weight_path = "./modelfile/unetplus.pth"
 model2_weight_path = "./modelfile/efficientnet.pth"
 
-test_dir = r"C:\Users\Sun\Pictures\test\Image"
+# 测试文件夹路径
+test_dir = ""
 label_dir = os.path.join(test_dir,'..','Label')
 dict = {
     "0": "DCM",
