@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>血管分割demo</title>
+        <link rel="icon" href="favicon.ico"/>
+        <link rel="shortcut icon" href="favicon.ico"/>
+        <title>心室分割与心脏病分类</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
     </head>
@@ -99,7 +101,11 @@
                 </div>
 
                 <div style="float:left;">
-                    <pre  id="classresult" style="width: 20vw;height: 20vw;line-height: 50px;margin-top:20px;"></pre>
+                    <pre  id="classresult" style="width: 15vw;height: 0vw;margin-top:10vw;margin-left: 20px;">
+                    <div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">11111111111111</div>
+                    <div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">11111111111111</div>
+                    <div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">11111111111111</div>
+                    </pre>
                 </div>
             </div>
 
@@ -226,6 +232,11 @@
                 }
                 else {
                     document.getElementById("out").src = out;
+
+                    // out.forEach(e=>{
+                    // flower+=`<div style="border-bottom: 1px solid #CCCCCC;line-height: 60px;font-size:16px;">${e}</div>`
+                    // });
+                    
                 }
                 
             }
