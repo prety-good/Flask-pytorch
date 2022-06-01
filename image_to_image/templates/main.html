@@ -10,7 +10,7 @@
 
     <body>
         <h1 style="text-align:center">
-            Flask + jQuery demo
+            心室分割与心脏病分类任务
         </h1>
 
         <div style="text-align:right;margin-right: 5vw;">
@@ -63,7 +63,7 @@
                         </button>
                     </div>
                     <div style="text-align:top;">
-                        <input type="text" id="dirpreresult" disabled value="请输入正确的路径，比如：`C:\Users\Sun\Pictures\test\Image`"style="width:40vw;height:5vh;">
+                        <input type="text" id="dirpreresult" disabled value="请输入正确的路径，比如：C:\Users\Sun\Pictures\test\Image"style="width:40vw;height:5vh;">
                     </div>
                 </div>
             
@@ -71,7 +71,7 @@
         </div>
         
 
-        <HR style="FILTER:progid:DXImageTransform.Microsoft.Shadow(color=#1a1212,direction=145,strength=15) ;margin-top: 40vh"width="90%" color=#1a1212 SIZE=3>
+        <HR style="FILTER:progid:DXImageTransform.Microsoft.Shadow(color=#1a1212,direction=145,strength=15) ;margin-top: 60vh"width="90%" color=#1a1212 SIZE=3>
         
         <div style="text-align: left; margin-left:10vw; margin-top:40px;" >
             <h3>
@@ -101,17 +101,15 @@
                 </div>
 
                 <div style="float:left;">
-                    <pre  id="classresult" style="width: 15vw;height: 0vw;margin-top:10vw;margin-left: 20px;">
-                    <div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">11111111111111</div>
-                    <div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">11111111111111</div>
-                    <div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">11111111111111</div>
+                    <pre  id="classresult" style="width: 15vw;height: 0vw;margin-top:12vw;margin-left: 20px;">
+                    <div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">类别:DCM   置信度:0.333</div><div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">类别:DCM   置信度:0.333</div><div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">类别:DCM   置信度:0.333</div>
                     </pre>
                 </div>
             </div>
 
         </div>
         
-        <HR style="FILTER:progid:DXImageTransform.Microsoft.Shadow(color=#1a1212,direction=145,strength=15) ;margin-top: 40px;"width="90%" color=#1a1212 SIZE=3>
+        <HR style="FILTER:progid:DXImageTransform.Microsoft.Shadow(color=#1a1212,direction=145,strength=15);margin-top:70vh;"width="90%" color=#1a1212 SIZE=3>
         
         <div style="text-align:left; margin-left:10vw;margin-top:20px;">
             <div style="text-align: left;margin-left:50vw; margin-top:10px;">
@@ -160,7 +158,7 @@
                     }
                 });
                 if( $.isEmptyObject(out)){
-                    document.getElementById("dirpreresult").value = "yes!";
+                    document.getElementById("dirpreresult").value = "I'm sorry, but something went wrong...";
                 }
                 else {
                     // 进行显示
@@ -196,16 +194,17 @@
                 document.getElementById("img0").src = out;
             }
 
-            function loading(){
-                document.getElementById("out").src = "static/loading.jpeg";
-                document.getElementById("text").value = "static/loading.jpeg";
-            }
+            // function loading(){
+            //     document.getElementById("out").src = "static/loading.jpeg";
+            //     document.getElementById("text").value = "static/loading.jpeg";
+            // }
 
             // 进行模型推理并显示推理结果
             function predict() {
                 var fileobj = $("#file0")[0].files[0];
                 console.log(fileobj);
                 var form = new FormData();
+                var result = ""
                 form.append("file", fileobj);
                 var out='';
                 $.ajax({
@@ -221,6 +220,7 @@
                     success: function (arg) {
                         console.log(arg);
                         out = arg.result;
+                        classification = arg.classification
                     },
                     error: function(){
                         console.log("后台处理错误");
@@ -233,10 +233,10 @@
                 else {
                     document.getElementById("out").src = out;
 
-                    // out.forEach(e=>{
-                    // flower+=`<div style="border-bottom: 1px solid #CCCCCC;line-height: 60px;font-size:16px;">${e}</div>`
-                    // });
-                    
+                    classification.forEach(e=>{
+                    result+=`<div style="border-bottom: 5px solid #CCCCCC;line-height: 30px;font-size:18px;">${e}</div>`
+                    });
+                    document.getElementById("classresult").innerHTML=result;
                 }
                 
             }
