@@ -8,15 +8,65 @@
 
     <body>
         <h1 style="text-align:center">
-            Flask + Jquery demo
+            Flask + jQuery demo
         </h1>
 
         <div style="text-align:right;margin-right: 5vw;">
             <a href="./snake" title="小游戏" target="top">玩个小游戏</a>
         </div>
 
-        <div style="text-align: left; margin-left:10vw; margin-top:10px;" >
-            <h3>单张测试：请选择血管分割任务的待分割图片文件</h3>
+        <HR style="FILTER:progid:DXImageTransform.Microsoft.Shadow(color=#1a1212,direction=145,strength=15)"width="90%" color=#1a1212 SIZE=3>
+        <div style="text-align: left; margin-left:10vw; margin-top:20px;" >
+            <div>
+                <h3>文件夹测试：请输入待分割分类的文件夹路径</h3>
+            </div>
+
+            <h style="text-align: left;">
+                请输入正确的路径，路径格式应该如下：
+            </h>
+                
+            <div style="text-align: left;">
+                <div style="float:left;">
+                    <pre>
+                        image_to_words
+                        │  │  class_indices.json
+                        │  │  main.ipynb
+                        │  │  main.py
+                        │  │  model.py
+                        │  │  
+                        │  ├─static
+                        │  │  └─js
+                        │  │          jquery.min.js
+                        │  │          
+                        │  └─templates
+                        │          up.html
+                    </pre>
+                </div>
+                
+                <div style="float:left;margin-left: 10vw;margin-top: 15vh;">
+                    <div style="text-align:top;">
+                        <input type="text" id="directory0" style="width: 40vw;height:5vh;">
+                    </div>
+                    <div style="text-align:top;">
+                        <button type="button" class="primary-btn" onclick="dirpre()" value="批量处理"style="margin-left:15vw;width:7vw;height:5vh;">
+                            批量处理
+                        </button>
+                    </div>
+                    <div style="text-align:top;">
+                        <input type="text" id="dirpreresult" disabled value="请输入正确的路径"style="width:40vw;height:5vh;">
+                    </div>
+                </div>
+            
+            </div>
+        </div>
+        
+
+        <HR style="FILTER:progid:DXImageTransform.Microsoft.Shadow(color=#1a1212,direction=145,strength=15) ;margin-top: 40vh"width="90%" color=#1a1212 SIZE=3>
+        
+        <div style="text-align: left; margin-left:10vw; margin-top:40px;" >
+            <h3>
+                单张测试：请选择血管分割任务的待分割图片文件
+            </h3>
         </div>
 
         <div style="text-align: left; margin-left:10vw; margin-top:20px;" >
@@ -27,40 +77,30 @@
 
             <div style="text-align:left;margin-top:6px;">
                 <div style="float:left;">
-                    <img src="" id="img0" style="width: 35vw; height: 35vw;">
+                    <img src="" id="img0" style="width: 30vw; height: 30vw;">
                 </div>
                     
-                <div style="float:left;margin-left:0vw; margin-top:30vw;">
-                    <input type="button" id="b0" onclick="predict()" value="预测" style="width: 5vw; height: 2vw;">
+                <div style="float:left;margin-left:0vw; margin-top:20vw;">
+                    <button type="button" class="primary-btn" onclick="predict()"style="width: 4vw; height: 2vw;">
+                        预测
+                    </button>
                 </div>
 
-                <div style="float:left;">
-                    <img src="" id="out"  style="width: 35vw;height: 35vw;">
+                <div>
+                    <img src="" id="out"  style="width: 30vw;height: 30vw;">
                 </div>
             </div>
 
         </div>
-
-
         
-
-        <div style="text-align: left; margin-left:20vw; margin-top:10vh;" >
-            <div style="text-align: top; margin-left:10vw; margin-top:10px;" >
-                <h3>单张测试：请选择血管分割任务的待分割图片文件</h3>
-            </div>
-            
-            <input type="text" id="directory0">
-            <input type="button" onclick="dirpre()" value="批量处理">
-            <input type="text" id="dirpreresult" disabled value="请输入正确的路径">
-            <br>
-        </div>
-
-        <div style="text-align:left; margin-left:10vw;margin-top:5vw;">
-            <div style="text-align: left;margin-left:0px; margin-top:0px;">
+        <HR style="FILTER:progid:DXImageTransform.Microsoft.Shadow(color=#1a1212,direction=145,strength=15) ;margin-top: 40px;"width="90%" color=#1a1212 SIZE=3>
+        
+        <div style="text-align:left; margin-left:10vw;margin-top:20px;">
+            <div style="text-align: left;margin-left:50vw; margin-top:10px;">
                 <input type = "text"  id="text" disabled  value="因服务器性能较差，因此推理速度很慢，请耐心等待">
             </div>
 
-            <div style="text-align: left;margin-left:710px; margin-top:0px;">
+            <div style="text-align: left;margin-left:50vw; margin-top:10px;">
                 <input type = "text"  id="text" disabled  value="Github项目地址： https://github.com/">
             </div>
         </div>
@@ -252,6 +292,39 @@
                 border-radius: 5px;
                 font-size: 13px;
             }
+            .primary-btn {
+                font-size: 14px;
+                color: #fff;
+                height: 44px;
+                padding: 0 15px;
+                background-color: #07c160;
+                border: 1px solid #07c160;
+                line-height: 1.2;
+                text-align: center;
+                border-radius: 2px;
+                cursor: pointer;
+                transition: opacity 0.2s;
+                outline: none;
+                position: relative;
+            }
+            .primary-btn::before {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 100%;
+                height: 100%;
+                background-color: #000;
+                border: inherit;
+                border-color: #000;
+                border-radius: inherit;
+                transform: translate(-50%, -50%);
+                opacity: 0;
+                content: ' ';
+            }
+            .primary-btn:active::before {
+                opacity: 0.2;
+            }
+
 
         </style>
         
